@@ -12,6 +12,10 @@ import {
   TableContainer,
 } from "@mui/material";
 
+function isValidTempScore(tempScore: string) {
+  return /^-?\d+$/.test(tempScore);
+}
+
 function ScoreTable() {
   const player1Name = useScoreCounterStore((state) => state.player1Name);
   const setPlayer1Name = useScoreCounterStore((state) => state.setPlayer1Name);
@@ -46,34 +50,43 @@ function ScoreTable() {
 
   const reversedRounds = reverse(rounds.slice());
 
+  const isPlayer1TempScoreValid = isValidTempScore(player1TempScore);
+  const isPlayer2TempScoreValid = isValidTempScore(player2TempScore);
+  const canSubmit = isPlayer1TempScoreValid && isPlayer2TempScoreValid;
+
   return (
     <div>
       <h1>Score Table</h1>
       <TextField
         variant="standard"
-        onChange={(e) => setPlayer1TempScore(parseInt(e.target.value))}
-        value={player1TempScore.toString()}
+        onChange={(e) => {
+          setPlayer1TempScore(e.target.value);
+        }}
+        value={player1TempScore}
         label={`${player1Name} Score`}
-        type="number"
         style={{ marginRight: 25 }}
+        error={!isPlayer1TempScoreValid}
       />
       <TextField
         variant="standard"
-        onChange={(e) => setPlayer2TempScore(parseInt(e.target.value))}
-        value={player2TempScore.toString()}
+        onChange={(e) => {
+          setPlayer2TempScore(e.target.value);
+        }}
+        value={player2TempScore}
         label={`${player2Name} Score`}
-        type="number"
         style={{ marginRight: 25 }}
+        error={!isPlayer2TempScoreValid}
       />
       <Button
         variant="contained"
+        disabled={!canSubmit}
         onClick={() => {
           addRound({
-            player1Score: player1TempScore,
-            player2Score: player2TempScore,
+            player1Score: parseInt(player1TempScore),
+            player2Score: parseInt(player2TempScore),
           });
-          setPlayer1TempScore(0);
-          setPlayer2TempScore(0);
+          setPlayer1TempScore("0");
+          setPlayer2TempScore("0");
         }}
       >
         Add
@@ -94,9 +107,9 @@ function ScoreTable() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell sx={{fontWeight: 'bold'}}>Round</TableCell>
-                <TableCell sx={{fontWeight: 'bold'}}>{player1Name}</TableCell>
-                <TableCell sx={{fontWeight: 'bold'}}>{player2Name}</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Round</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>{player1Name}</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>{player2Name}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -105,10 +118,10 @@ function ScoreTable() {
                   <b>Total</b>
                 </TableCell>
                 <TableCell>
-                  <b>{player1TotalScore}</b>
+                  <b>{player1TotalScore.toString()}</b>
                 </TableCell>
                 <TableCell>
-                  <b>{player2TotalScore}</b>
+                  <b>{player2TotalScore.toString()}</b>
                 </TableCell>
               </TableRow>
               {reversedRounds.map((round, idx) => (

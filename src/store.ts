@@ -12,10 +12,10 @@ interface ScoreCounterState {
   setPlayer1Name: (name: string) => void;
   setPlayer2Name: (name: string) => void;
 
-  player1TempScore: number;
-  player2TempScore: number;
-  setPlayer1TempScore: (score: number) => void;
-  setPlayer2TempScore: (score: number) => void;
+  player1TempScore: string;
+  player2TempScore: string;
+  setPlayer1TempScore: (score: string) => void;
+  setPlayer2TempScore: (score: string) => void;
 
   getPlayer1TotalScore: () => number;
   getPlayer2TotalScore: () => number;
@@ -37,11 +37,11 @@ const useScoreCounterStore = create<ScoreCounterState>()(
         setPlayer1Name: (name: string) => set({ player1Name: name }),
         setPlayer2Name: (name: string) => set({ player2Name: name }),
 
-        player1TempScore: 0,
-        player2TempScore: 0,
-        setPlayer1TempScore: (score: number) =>
+        player1TempScore: "0",
+        player2TempScore: "0",
+        setPlayer1TempScore: (score: string) =>
           set({ player1TempScore: score }),
-        setPlayer2TempScore: (score: number) =>
+        setPlayer2TempScore: (score: string) =>
           set({ player2TempScore: score }),
 
         addGameRound: (round: GameRound) =>
